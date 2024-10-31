@@ -6,29 +6,32 @@ void on_find_route_clicked(GtkWidget *widget, gpointer data) {
     GtkWidget *end_entry = GTK_WIDGET(g_object_get_data(G_OBJECT(widget), "end_entry"));
     GtkWidget *output_text_view = GTK_WIDGET(g_object_get_data(G_OBJECT(widget), "output_text_view"));
     GtkWidget *path_combo = GTK_WIDGET(g_object_get_data(G_OBJECT(widget), "path_combo"));
+    GtkWidget *mode_combo = GTK_WIDGET(g_object_get_data(G_OBJECT(widget), "mode_combo"));
 
     const gchar *start = gtk_entry_get_text(GTK_ENTRY(start_entry));
     const gchar *end = gtk_entry_get_text(GTK_ENTRY(end_entry));
     gchar *path_type = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(path_combo));
+    gchar *mode_type = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(mode_combo));
 
     // Implement route finding logic here
-    gchar *result = g_strdup_printf("Finding %s route from %s to %s...", path_type, start, end);
+    gchar *result = g_strdup_printf("Finding %s route by %s from %s to %s...", path_type, mode_type, start, end);
 
     // Display result
     GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(output_text_view));
     gtk_text_buffer_set_text(buffer, result, -1);
     g_free(result);
     g_free(path_type);
+    g_free(mode_type);
 }
 
 int main(int argc, char *argv[]) {
     GtkWidget *window;
     GtkWidget *vbox;
     GtkWidget *grid;
-    GtkWidget *start_label, *end_label, *path_label;
+    GtkWidget *start_label, *end_label, *path_label, *mode_label;
     GtkWidget *start_entry, *end_entry;
     GtkWidget *find_route_button, *reset_button;
-    GtkWidget *path_combo;
+    GtkWidget *path_combo, *mode_combo;
     GtkWidget *output_text_view;
     GtkTextBuffer *buffer;
     GtkCssProvider *css_provider;
@@ -40,10 +43,12 @@ int main(int argc, char *argv[]) {
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window), "Delhi Transportation System");
     gtk_window_set_default_size(GTK_WINDOW(window), 500, 400);
+    gtk_container_set_border_width(GTK_CONTAINER(window), 10);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     // Create vertical box container
     vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
+    gtk_widget_set_halign(vbox, GTK_ALIGN_CENTER);
     gtk_container_add(GTK_CONTAINER(window), vbox);
 
     // Create grid container for input fields
@@ -56,6 +61,7 @@ int main(int argc, char *argv[]) {
     start_label = gtk_label_new("Starting Location:");
     end_label = gtk_label_new("Destination:");
     path_label = gtk_label_new("Path Type:");
+    mode_label = gtk_label_new("Mode of Transport:");
 
     start_entry = gtk_entry_new();
     end_entry = gtk_entry_new();
@@ -65,6 +71,11 @@ int main(int argc, char *argv[]) {
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(path_combo), "Shortest Path");
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(path_combo), "Cost-Effective Path");
     gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(path_combo), "Safest Path");
+
+    // Create dropdown menu for mode type
+    mode_combo = gtk_combo_box_text_new();
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(mode_combo), "Bus");
+    gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(mode_combo), "Metro");
 
     // Create output text view
     output_text_view = gtk_text_view_new();
@@ -82,8 +93,10 @@ int main(int argc, char *argv[]) {
     gtk_grid_attach(GTK_GRID(grid), end_entry, 1, 1, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), path_label, 0, 2, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), path_combo, 1, 2, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), find_route_button, 0, 3, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid), reset_button, 1, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), mode_label, 0, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), mode_combo, 1, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), find_route_button, 0, 4, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), reset_button, 1, 4, 1, 1);
 
     gtk_box_pack_start(GTK_BOX(vbox), output_text_view, TRUE, TRUE, 10);
 
@@ -92,11 +105,13 @@ int main(int argc, char *argv[]) {
     g_object_set_data(G_OBJECT(find_route_button), "end_entry", end_entry);
     g_object_set_data(G_OBJECT(find_route_button), "output_text_view", output_text_view);
     g_object_set_data(G_OBJECT(find_route_button), "path_combo", path_combo);
+    g_object_set_data(G_OBJECT(find_route_button), "mode_combo", mode_combo);
     g_signal_connect(find_route_button, "clicked", G_CALLBACK(on_find_route_clicked), NULL);
 
     // Load and apply CSS for styling
     css_provider = gtk_css_provider_new();
     gtk_css_provider_load_from_data(css_provider,
+        "window { padding: 10px; }"
         "button { padding: 10px; margin: 5px; border-radius: 5px; }"
         "entry { padding: 5px; margin: 5px; }"
         "textview { padding: 10px; margin: 10px; border: 1px solid #ccc; }"
@@ -111,3 +126,4 @@ int main(int argc, char *argv[]) {
     gtk_main();
     return 0;
 }
+
