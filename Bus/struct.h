@@ -30,6 +30,7 @@ typedef struct Route {
 	int *stops;
 	Time *times;
 	float *fare;
+	int stopCount;
 } Route;
 
 typedef struct MinHeapNode {
