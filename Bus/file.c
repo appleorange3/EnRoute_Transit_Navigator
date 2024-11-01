@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "struct.h"
-#include "create.c"
+#include "create.h"
 
 // Function to append a Stop to the linked list
 void appendStop(Stop **head, int stopId, float lat, float lon, const char *stopName) {
@@ -109,19 +109,8 @@ Route* readRoutesFromFile(const char *filename, int *routeCount) {
     return routes;
 }
 
-int main() {
-	Stop *stops = readStopsFromFile("stops.txt");
-	printStops(stops);
-	
-	int routeCount = 0;
-    Route *routes = readRoutesFromFile("../data/bus/new_stop_times.txt", &routeCount);
-
-    if (routes == NULL) {
-    	printf("Failed\n");
-        return 1;  // Exit if file reading failed
-    }
-
-    for (int i = 0; i < routeCount; i++) {
+void printRoutes(Route *routes, int routeCount) {
+	for (int i = 0; i < routeCount; i++) {
         printf("Route ID: %d\n", routes[i].routeId);
         for (int j = 0; j < routes[i].stopCount; j++) {
             printf("%d ", routes[i].stops[j]);
@@ -133,14 +122,5 @@ int main() {
             printf("\n");
             printf("\n");
     }
-
-    for (int i = 0; i < routeCount; i++) {
-        free(routes[i].stops);
-        free(routes[i].times);
-    }
-    
-    free(routes);
-
-    return 0;
-	return 0;
+    return;
 }
