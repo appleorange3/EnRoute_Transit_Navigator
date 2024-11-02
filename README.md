@@ -13,13 +13,11 @@ EnRoute is a transit navigation system designed to help users find the shortest,
 - **Data Structures**:
   - Graph (Undirected Weighted Graph): For modeling the metro and bus network.
   - Adjacency List: Efficient space utilization for the network representation.
-  - Hashmaps: For fast lookup of station details, routes, and fare information.
   - Trie (Prefix Tree): For the autocomplete system.
   - Min-Heap (Priority Queue): Used in Dijkstra’s algorithm for optimal pathfinding.
 
 - **Algorithms**:
   - **Dijkstra's Algorithm**: For shortest path calculation.
-  - **Bellman-Ford Algorithm**: For handling negative edge weights, such as fare adjustments or delays.
   - **Breadth-First Search (BFS)**: For minimizing interchanges between routes.
 
 ### Data Sources
