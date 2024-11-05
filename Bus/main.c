@@ -1,16 +1,21 @@
-#include "struct.h"
-#include "file.h"
-#include "create.h"
-#include <stdio.h>
+#include "graph.h"
+#include "file_operations.h"
 #include <stdlib.h>
 
-
 int main() {
-	Stop *stops = readStopsFromFile("../data/bus/stops.txt");
-	printStops(stops);
-	
-	int routeCount = 0;
-    Route *routes = readRoutesFromFile("../data/bus/new_stop_times.txt", &routeCount);
+    int num_stops = 10560;
+    Graph* graph = create_graph(num_stops);
+
+    load_stops("stops.txt", graph);
+    load_stop_times("stop_times.txt", graph);
+    load_fares("fare_attributes.txt", graph);
+
+    display_graph(graph);
+
+    free_graph(graph);
+
+    int routeCount = 0;
+    Route *routes = readRoutesFromFile("new_stop_times.txt", &routeCount);
     
 
     if (routes == NULL) {
@@ -18,7 +23,7 @@ int main() {
         return 1;  // Exit if file reading failed
     }
 	
-    printRoutes(routes, routeCount);
+    //printRoutes(routes, routeCount);
 
     for (int i = 0; i < routeCount; i++) {
         free(routes[i].stops);
@@ -27,5 +32,6 @@ int main() {
     
     free(routes);
 
-	return 0;
+    return 0;
 }
+
