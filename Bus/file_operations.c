@@ -74,6 +74,7 @@ if (curr_seq_no){
 
     fclose(file);
 }
+
 Route* readRoutesFromFile(const char *filename, int *routeCount) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -107,6 +108,18 @@ Route* readRoutesFromFile(const char *filename, int *routeCount) {
    
     fclose(file);
     return routes;
+}
+
+Route *trips(Route *routes, char *filename) {
+	FILE *fptr = fopen(filename, "r");
+	if(fptr == NULL)
+		perror("Error opening file");
+        return NULL;
+    }
+    int i = 0, j = 0, prev_id = 0, current_id;
+    char line[1024];
+    fgets(line, sizeof(line), fptr);
+    while(sscanf("%d,%*d, %*[^_]%[^_]%d", &current_id, &))
 }
 
 

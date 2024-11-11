@@ -15,6 +15,7 @@ typedef struct Route {
 	int routeId;
 	int *stops;
 	Time *times;
+	Time *startTimes;
 	float *fare;
 	int stopCount;
 } Route;
@@ -64,11 +65,8 @@ AdjStop* create_adj_stop(int stop_id, int bus_id);
 Route* createRoute(int routeId, int numStops);
 MinHeapNode* createMinHeapNode(int stopId, Time time);
 MinHeap* createMinHeap(int capacity);
-
 void addStopToRoute(Route *route, int stopId, Time time);
-
 void printRoutes(Route *routes, int routeCount);
-
 void add_edge(Graph* graph, int from_stop_id, int to_stop_id, Time travel_time, float fare, int bus_id);
 void display_graph(Graph* graph);
 void free_graph(Graph* graph);
